@@ -1,0 +1,48 @@
+graph TD
+    %% Definição de Entidades (Nós)
+    Client(["👤 Cliente / Frontend"])
+    Express["🌐 Express Server"]
+    Routes{"📍 Rotas da API"}
+    AuthMiddleware("🛡️ Middleware de Autenticação")
+    Controllers["🎮 Camada de Controllers"]
+    Services["⚙️ Camada de Services"]
+    Prisma[("🗄️ PostgreSQL via Prisma")]
+    Upload[("☁️ Storage Arquivos")]
+
+    %% Fluxo de Entrada e Direcionamento
+    Client -->|"Requisição HTTP"| Express
+    Express --> Routes
+    
+    %% Divisão de Rotas (Protegidas vs Públicas)
+    Routes -->|"Rotas Protegidas"| AuthMiddleware
+    Routes -->|"Rotas Públicas (Login)"| Controllers
+    
+    %% Middleware de Segurança
+    AuthMiddleware -->|"Valida JWT c/ Sucesso"| Controllers
+    AuthMiddleware -.->|"401 Não Autorizado"| Client
+    
+    %% Processamento da Lógica
+    Controllers -->|"Injeta Dados e DTOs"| Services
+    
+    %% Integração com Banco e Cloud
+    Services -->|"Persistência, Buscas e Transações"| Prisma
+    Services -->|"Upload e Exclusão de Arquivos estáticos"| Upload
+    
+    %% Fluxo de Saída / Respostas
+    Prisma --> Services
+    Upload --> Services
+    Services --> Controllers
+    Controllers -->|"Resposta Tratada JSON"| Client
+
+    %% Estilização Profissional de Cores
+    classDef client fill:#3498db,stroke:#2980b9,stroke-width:2px,color:#fff;
+    classDef server fill:#2c3e50,stroke:#1a252f,stroke-width:2px,color:#fff;
+    classDef logic fill:#e67e22,stroke:#d35400,stroke-width:2px,color:#fff;
+    classDef db fill:#2ecc71,stroke:#27ae60,stroke-width:2px,color:#fff;
+    classDef auth fill:#e74c3c,stroke:#c0392b,stroke-width:2px,color:#fff;
+    
+    class Client client;
+    class Express,Routes server;
+    class Controllers,Services logic;
+    class Prisma,Upload db;
+    class AuthMiddleware auth;

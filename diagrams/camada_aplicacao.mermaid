@@ -1,0 +1,250 @@
+classDiagram
+  %% ========================================
+  %% INTERFACES E DTOs (Data Transfer Objects)
+  %% ========================================
+  class CreateCourseDTO {
+    <<interface>>
+    +String title
+    +String description?
+    +String thumbnailUrl?
+  }
+  
+  class UpdateCourseDTO {
+    <<interface>>
+    +Boolean isPublished?
+  }
+  
+  class CreateModuleDTO {
+    <<interface>>
+    +String title
+    +String description?
+    +Int order
+    +String courseId
+  }
+
+  class UpdateModuleDTO {
+    <<interface>>
+  }
+
+  class CreateLessonDTO {
+    <<interface>>
+    +String title
+    +String youtubeVideoId
+    +String descriptionText?
+    +String moduleId
+  }
+
+  class UpdateLessonDTO {
+    <<interface>>
+  }
+
+  class CreateActivityDTO {
+    <<interface>>
+    +String title
+    +String description
+    +String lessonId
+  }
+
+  class UpdateActivityDTO {
+    <<interface>>
+  }
+
+  class CreateCommentDTO {
+    <<interface>>
+    +String content
+    +String lessonId
+    +String userId
+  }
+
+  class MarkProgressDTO {
+    <<interface>>
+    +String lessonId
+    +String userId
+    +Boolean isCompleted
+  }
+
+  class MarkActivityProgressDTO {
+    <<interface>>
+    +String activityId
+    +String userId
+    +Boolean isCompleted
+  }
+
+  %% ========================================
+  %% SERVICES (Lógica de Negócios)
+  %% ========================================
+  class AuthService {
+    +register(data: any): Promise~User~
+    +login(data: any): Promise~Token~
+  }
+
+  class UserService {
+    +getProfile(userId: string): Promise~User~
+    +changePassword(userId: string, data: any): Promise~void~
+    +updateProfile(userId: string, data: any): Promise~User~
+  }
+
+  class CourseService {
+    +createCourse(data: CreateCourseDTO): Promise~Course~
+    +listCourses(): Promise~Course[]~
+    +updateCourse(courseId: string, data: UpdateCourseDTO): Promise~Course~
+    +deleteCourse(courseId: string): Promise~Course~
+    +getCourseTree(courseId: string): Promise~Course~
+  }
+
+  class ModuleService {
+    +createModule(data: CreateModuleDTO): Promise~Module~
+    +getModuleById(moduleId: string): Promise~Module~
+    +updateModule(moduleId: string, data: UpdateModuleDTO): Promise~Module~
+    +deleteModule(moduleId: string): Promise~Module~
+  }
+
+  class LessonService {
+    +createLesson(data: CreateLessonDTO): Promise~Lesson~
+    +getLessonById(lessonId: string): Promise~Lesson~
+    +updateLesson(lessonId: string, data: UpdateLessonDTO): Promise~Lesson~
+    +deleteLesson(lessonId: string): Promise~Lesson~
+  }
+
+  class ActivityService {
+    +createActivity(data: CreateActivityDTO): Promise~Activity~
+    +updateActivity(activityId: string, data: UpdateActivityDTO): Promise~Activity~
+    +deleteActivity(activityId: string): Promise~Activity~
+    +getByLessonId(lessonId: string): Promise~Activity[]~
+    +getActivityById(activityId: string, userId: string): Promise~Activity~
+  }
+
+  class CommentService {
+    +createComment(data: CreateCommentDTO): Promise~Comment~
+    +listByLesson(lessonId: string): Promise~Comment[]~
+    +deleteComment(commentId: string, userId: string, userRole: string): Promise~void~
+  }
+
+  class ProgressService {
+    +saveProgress(data: MarkProgressDTO): Promise~Progress~
+  }
+
+  class ActivityProgressService {
+    +markAsCompleted(data: MarkActivityProgressDTO): Promise~ActivityProgress~
+  }
+
+  class UploadService {
+    +uploadFile(file: Express.Multer.File, folder: string): Promise~string~
+    +deleteFile(fileUrl: string): Promise~void~
+  }
+
+  class DashboardService {
+    +getDashboardData(userId: string): Promise~Object~
+  }
+
+  %% ========================================
+  %% CONTROLLERS (Lidadores HTTP)
+  %% ========================================
+  class AuthController {
+    -authService: AuthService
+    +register(req, res): Promise~void~
+    +login(req, res): Promise~void~
+  }
+  
+  class UserController {
+    -userService: UserService
+    +getProfile(req, res): Promise~void~
+    +changePassword(req, res): Promise~void~
+    +updateProfile(req, res): Promise~void~
+  }
+  
+  class CourseController {
+    -courseService: CourseService
+    +create(req, res): Promise~void~
+    +list(req, res): Promise~void~
+    +update(req, res): Promise~void~
+    +delete(req, res): Promise~void~
+    +getById(req, res): Promise~void~
+  }
+  
+  class ModuleController {
+    -moduleService: ModuleService
+    +create(req, res): Promise~void~
+    +getById(req, res): Promise~void~
+    +update(req, res): Promise~void~
+    +delete(req, res): Promise~void~
+  }
+
+  class LessonController {
+    -lessonService: LessonService
+    +create(req, res): Promise~void~
+    +getById(req, res): Promise~void~
+    +update(req, res): Promise~void~
+    +delete(req, res): Promise~void~
+  }
+
+  class ActivityController {
+    -activityService: ActivityService
+    +create(req, res): Promise~void~
+    +update(req, res): Promise~void~
+    +delete(req, res): Promise~void~
+    +getByLessonId(req, res): Promise~void~
+    +getById(req, res): Promise~void~
+  }
+
+  class CommentController {
+    -commentService: CommentService
+    +create(req, res): Promise~void~
+    +listByLesson(req, res): Promise~void~
+    +delete(req, res): Promise~void~
+  }
+
+  class ProgressController {
+    -progressService: ProgressService
+    +mark(req, res): Promise~void~
+  }
+
+  class ActivityProgressController {
+    -progressService: ActivityProgressService
+    +markAsCompleted(req, res): Promise~void~
+  }
+  
+  class UploadController {
+    -uploadService: UploadService
+    +upload(req, res): Promise~void~
+    +delete(req, res): Promise~void~
+  }
+  
+  class DashboardController {
+    -dashboardService: DashboardService
+    +getDashboardData(req, res): Promise~void~
+  }
+
+  %% ========================================
+  %% RELACIONAMENTOS / INJEÇÕES
+  %% ========================================
+  
+  %% Controllers consumindo Services
+  AuthController --> AuthService : injeta
+  UserController --> UserService : injeta
+  CourseController --> CourseService : injeta
+  ModuleController --> ModuleService : injeta
+  LessonController --> LessonService : injeta
+  ActivityController --> ActivityService : injeta
+  CommentController --> CommentService : injeta
+  ProgressController --> ProgressService : injeta
+  ActivityProgressController --> ActivityProgressService : injeta
+  UploadController --> UploadService : injeta
+  DashboardController --> DashboardService : injeta
+
+  %% Services consumindo DTOs (Uso de Interfaces para tipagem)
+  CourseService ..> CreateCourseDTO : recebe
+  CourseService ..> UpdateCourseDTO : recebe
+  ModuleService ..> CreateModuleDTO : recebe
+  ModuleService ..> UpdateModuleDTO : recebe
+  LessonService ..> CreateLessonDTO : recebe
+  LessonService ..> UpdateLessonDTO : recebe
+  ActivityService ..> CreateActivityDTO : recebe
+  ActivityService ..> UpdateActivityDTO : recebe
+  CommentService ..> CreateCommentDTO : recebe
+  ProgressService ..> MarkProgressDTO : recebe
+  ActivityProgressService ..> MarkActivityProgressDTO : recebe
+  
+  %% Cross-Services (Upload de Arquivos)
+  UserService ..> UploadService : utiliza
+  CourseService ..> UploadService : utiliza

@@ -1,0 +1,112 @@
+classDiagram
+  class Role {
+    <<enumeration>>
+    ADMIN
+    STUDENT
+  }
+
+  class User {
+    +String id
+    +String name
+    +String email
+    +String passwordHash
+    +Role role
+    +String profilePictureUrl
+    +DateTime createdAt
+    +DateTime updatedAt
+  }
+
+  class Course {
+    +String id
+    +String title
+    +String description
+    +String thumbnailUrl
+    +Boolean isPublished
+    +DateTime createdAt
+    +DateTime updatedAt
+  }
+
+  class Module {
+    +String id
+    +String title
+    +String description
+    +Int order
+    +String courseId
+    +DateTime createdAt
+    +DateTime updatedAt
+  }
+
+  class Lesson {
+    +String id
+    +String title
+    +String youtubeVideoId
+    +String descriptionText
+    +String stlFileUrl
+    +String pdfFileUrl
+    +Int durationSeconds
+    +Int order
+    +String moduleId
+    +DateTime createdAt
+    +DateTime updatedAt
+  }
+
+  class Activity {
+    +String id
+    +String title
+    +String description
+    +Json materials
+    +String steps
+    +String circuitImageUrl
+    +String codeFileUrl
+    +Int estimatedTimeMinutes
+    +String difficulty
+    +String lessonId
+    +DateTime createdAt
+    +DateTime updatedAt
+  }
+
+  class Comment {
+    +String id
+    +String content
+    +String userId
+    +String lessonId
+    +String parentCommentId
+    +DateTime createdAt
+    +DateTime updatedAt
+  }
+
+  class Progress {
+    +String id
+    +Int watchedSeconds
+    +Boolean isCompleted
+    +String userId
+    +String lessonId
+    +DateTime createdAt
+    +DateTime updatedAt
+  }
+
+  class ActivityProgress {
+    +String id
+    +Boolean isCompleted
+    +DateTime completedAt
+    +String userId
+    +String activityId
+    +DateTime createdAt
+    +DateTime updatedAt
+  }
+
+  %% Relacionamentos de Composição/Associação
+  Course "1" *-- "*" Module : contém
+  Module "1" *-- "*" Lesson : contém
+  Lesson "1" *-- "*" Activity : contém
+  
+  User "1" *-- "*" Comment : cria
+  User "1" *-- "*" Progress : possui
+  User "1" *-- "*" ActivityProgress : possui
+  
+  Lesson "1" *-- "*" Comment : possui
+  Lesson "1" *-- "*" Progress : possui
+  Activity "1" *-- "*" ActivityProgress : possui
+
+  Comment "1" --> "*" Comment : parentComment
+  User ..> Role : é do tipo

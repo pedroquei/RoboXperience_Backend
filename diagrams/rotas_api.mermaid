@@ -1,0 +1,95 @@
+graph LR
+    %% Raiz da API
+    Root(("🌐 API (/api)"))
+
+    %% Roteadores Base
+    Auth{"/auth"}
+    Users{"/users"}
+    Courses{"/courses"}
+    Modules{"/modules"}
+    Lessons{"/lessons"}
+    Activities{"/activities"}
+    Progress{"/progress"}
+    ActivityProg{"/activity-progress"}
+    Comments{"/comments"}
+    Upload{"/upload"}
+    Dashboard{"/dashboard"}
+
+    %% Conectando a Raiz aos Roteadores
+    Root --> Auth & Users & Courses & Modules & Lessons & Activities & Progress & ActivityProg & Comments & Upload & Dashboard
+
+    %% =======================
+    %% Endpoints - Auth
+    %% =======================
+    Auth -->|"POST"| auth_reg["/register"]
+    Auth -->|"POST"| auth_log["/login"]
+
+    %% =======================
+    %% Endpoints - Users
+    %% =======================
+    Users -->|"GET"| user_prof1["/profile"]
+    Users -->|"PUT"| user_prof2["/profile"]
+    Users -->|"PUT"| user_pwd["/change-password"]
+
+    %% =======================
+    %% Endpoints - Courses
+    %% =======================
+    Courses -->|"GET"| c_list["/"]
+    Courses -->|"POST"| c_add["/"]
+    Courses -->|"GET"| c_id1["/:id"]
+    Courses -->|"PUT"| c_id2["/:id"]
+    Courses -->|"DELETE"| c_id3["/:id"]
+
+    %% =======================
+    %% Endpoints - Modules
+    %% =======================
+    Modules -->|"POST"| m_add["/"]
+    Modules -->|"GET"| m_id1["/:id"]
+    Modules -->|"PUT"| m_id2["/:id"]
+    Modules -->|"DELETE"| m_id3["/:id"]
+
+    %% =======================
+    %% Endpoints - Lessons
+    %% =======================
+    Lessons -->|"POST"| l_add["/"]
+    Lessons -->|"GET"| l_id1["/:id"]
+    Lessons -->|"PUT"| l_id2["/:id"]
+    Lessons -->|"DELETE"| l_id3["/:id"]
+
+    %% =======================
+    %% Endpoints - Activities
+    %% =======================
+    Activities -->|"POST"| a_add["/"]
+    Activities -->|"GET"| a_id1["/:id"]
+    Activities -->|"PUT"| a_id2["/:id"]
+    Activities -->|"DELETE"| a_id3["/:id"]
+    Activities -->|"GET"| a_less["/lesson/:lessonId"]
+
+    %% =======================
+    %% Endpoints - Comments
+    %% =======================
+    Comments -->|"POST"| cm_add["/"]
+    Comments -->|"GET"| cm_less["/lesson/:lessonId"]
+    Comments -->|"DELETE"| cm_id["/:id"]
+
+    %% =======================
+    %% Endpoints - Progress
+    %% =======================
+    Progress -->|"POST"| p_add["/"]
+    ActivityProg -->|"POST"| ap_add["/mark"]
+
+    %% =======================
+    %% Endpoints - Upload & Dashboard
+    %% =======================
+    Upload -->|"POST"| up_add["/"]
+    Upload -->|"DELETE"| up_del["/"]
+    Dashboard -->|"GET"| dash_get["/"]
+
+    %% Estilização de Cores
+    classDef root fill:#2c3e50,stroke:#1a252f,stroke-width:3px,color:#fff;
+    classDef router fill:#34495e,stroke:#2c3e50,stroke-width:2px,color:#fff;
+    classDef endpoint fill:#ecf0f1,stroke:#bdc3c7,stroke-width:1px,color:#2c3e50;
+
+    class Root root;
+    class Auth,Users,Courses,Modules,Lessons,Activities,Progress,ActivityProg,Comments,Upload,Dashboard router;
+    class auth_reg,auth_log,user_prof1,user_prof2,user_pwd,c_list,c_add,c_id1,c_id2,c_id3,m_add,m_id1,m_id2,m_id3,l_add,l_id1,l_id2,l_id3,a_add,a_id1,a_id2,a_id3,a_less,cm_add,cm_less,cm_id,p_add,ap_add,up_add,up_del,dash_get endpoint;

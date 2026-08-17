@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    /* Mapeamento de Pastas */
+    "rootDir": "./src",
+    "outDir": "./dist",
+
+    /* Regras do MikroORM (Essencial) */
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    /* Configurações Modernas do Node.js */
+    "target": "ES2022",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Segurança e Clean Code (Modo Estrito) */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": false,
+
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

@@ -1,0 +1,44 @@
+sequenceDiagram
+    autonumber
+    actor Client as Aplicação Cliente (Frontend)
+    participant Router as Express Router
+    participant Auth as Auth Middleware
+    participant Controller as Controller Layer
+    participant Service as Service Layer
+    participant Prisma as Prisma ORM (Banco de Dados)
+    participant Storage as Upload Service (Cloud/R2)
+
+    %% Início da Requisição
+    Client->>Router: Requisição HTTP (ex: POST /api/v1/...)
+    
+    %% Camada de Segurança e Middlewares
+    Router->>Auth: Valida Token JWT (Header Authorization)
+    
+    alt Token Ausente, Expirado ou Inválido
+        Auth-->>Client: HTTP 401 Unauthorized
+    else Token Válido
+        Auth->>Controller: Libera Acesso Injetando `req.user`
+        
+        %% Camada de Controle
+        Note over Controller: Extrai e valida Body / Params / Query
+        Controller->>Service: Delega DTOs e Executa Regra de Negócio
+        
+        %% Lógica de Negócio e Serviços Auxiliares
+        alt A requisição inclui upload de arquivo (Foto, PDF, STL)
+            Service->>Storage: uploadFile(file)
+            Storage-->>Service: Retorna URL segura do arquivo
+        end
+        
+        %% Camada de Dados (Persistência)
+        Service->>Prisma: Transação / Execução de Query (create, update...)
+        Prisma-->>Service: Retorna Entidade Instanciada (Model)
+        
+        %% Retorno e Tratamento de Erros
+        Service-->>Controller: Retorna Resultado Formulado (Payload) ou Dispara Exceção
+        
+        alt Ocorreu Erro Conhecido (ex: "CURSO_NAO_ENCONTRADO")
+            Controller-->>Client: HTTP 400 ou 404 (JSON com erro tratado)
+        else Executado com Sucesso
+            Controller-->>Client: HTTP 200 ou 201 (JSON com os dados esperados)
+        end
+    end

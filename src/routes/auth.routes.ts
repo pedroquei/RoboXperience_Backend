@@ -1,0 +1,13 @@
+import { Router } from 'express';
+import { AuthController } from '../controllers/AuthController';
+
+const router = Router();
+const authController = new AuthController();
+
+// Quando chamarem POST /api/auth/register, executa a função register
+router.post('/register', authController.register);
+
+// Quando chamarem POST /api/auth/login, executa a função login
+router.post('/login', authController.login);
+
+export default router;
