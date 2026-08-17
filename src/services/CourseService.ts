@@ -5,6 +5,7 @@ export interface CreateCourseDTO {
     title: string;
     description?: string;
     thumbnailUrl?: string;
+    difficulty?: string;
 }
 
 export interface UpdateCourseDTO extends Partial<CreateCourseDTO> {
@@ -94,6 +95,7 @@ export class CourseService {
                 title: true,
                 description: true,
                 thumbnailUrl: true,
+                difficulty: true,
                 modules: {
                     orderBy: { order: 'asc' },
                     select: {
